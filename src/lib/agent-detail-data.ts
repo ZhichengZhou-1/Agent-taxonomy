@@ -214,7 +214,7 @@ const agentsData: AgentDetail[] = [
             description:
               "WebVoyager is a large multimodal web agent designed to simulate end-to-end user interaction with browsers without any human intervention. Unlike earlier web agents that rely solely on DOM text extraction, WebVoyager integrates multimodal perception, reasoning and action planning within a single unified structure.  WebVoyager observes the web page, takes screenshots, parses the underlying DOM structure and then use an LLM as a planner for next action based on user query. What makes WebVoyager special is its ability to generalize across multiple complex web pages without fine tuning. Since it leverages the reasoning ability of LLM it can then parse the DOM tree structure and generate the next desired action based on user input rather than like traditional text-based web agents. WebVoyager has achieved a proven success rate of 59.1% on their own benchmark which surpasses the most state-of-art LLM GPT-4o.",
             references: ["He et al., 2024"],
-            image: "/agents/web-agents/webvoyager.png",
+            image: "/agents/web-agents/WebVoyager.png",
           },
         ],
       },
