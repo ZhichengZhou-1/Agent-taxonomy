@@ -61,7 +61,7 @@ export interface AgentDetail {
     prompt_template: {
       title: string;
       name: string;
-      code: string;
+      code: string[];
       references: string[];
     };
     setup_checklist: {
@@ -221,7 +221,8 @@ const agentsData: AgentDetail[] = [
       prompt_template: {
         title: "Prompt Template",
         name: "Example Prompt from Webvoyager",
-        code: `Imagine you are a robot browsing the web, just like humans. Now you need to complete a task. In each iteration, you will receive an Observation that includes a screenshot of a webpage and some texts. This screenshot will feature Numerical Labels placed in the TOP LEFT corner of each Web Element. Carefully analyze the information to identify the Numerical Label corresponding to the Web Element that requires interaction, then follow the guidelines and choose one of the following actions: 
+        code: [
+          `Imagine you are a robot browsing the web, just like humans. Now you need to complete a task. In each iteration, you will receive an Observation that includes a screenshot of a webpage and some texts. This screenshot will feature Numerical Labels placed in the TOP LEFT corner of each Web Element. Carefully analyze the information to identify the Numerical Label corresponding to the Web Element that requires interaction, then follow the guidelines and choose one of the following actions: 
         1. Click a Web Element. 
         2. Delete existing content in a textbox and then type content. 
         3. Scroll up or down. 
@@ -247,6 +248,7 @@ const agentsData: AgentDetail[] = [
         Then the User will provide: 
         Observation: {A labeled screenshot Given by User}
 `,
+        ],
         references: ["He et al., 2024"],
       },
       setup_checklist: {
@@ -576,7 +578,8 @@ AIDev Dataset: A massive collection of 456,000 real pull requests created by cod
       prompt_template: {
         title: "Prompt Template",
         name: "Example Prompt templates for Architectural & Workflow Strategies and Functional Task",
-        code: `1. Architectural & Workflow Strategies
+        code: [
+          `1. Architectural & Workflow Strategies
 These strategies focus on how to structure the agent's "brain" and workflow to handle complex, multi-step engineering problems. They are derived from academic surveys and frameworks like MetaGPT, ChatDev, and CodeChain.
 A. Multi-Agent Collaboration (Role-Playing)
 Concept: Assign specific professional identities to restrict behavioral scope and stabilize interactions. This simulates a software company where agents (Product Manager, Architect, Engineer) collaborate.
@@ -626,7 +629,8 @@ You have generated the following code:
 1. Perform a line-by-line explanation of the code above to identify where the logic fails.
 2. Compare the code against the requirement: [Insert Requirement].
 3. Generate a revised version of the code that fixes the identified error.
-
+`,
+          `
 2. Functional Task Templates
 These templates are designed for specific, discrete coding tasks. They illustrate how to structure requests clearly for common actions like refactoring, testing, and documentation.
 A. Code Generation (Spec → Code)
@@ -675,6 +679,7 @@ F. Project Planning & Documentation
 Documentation: "Add a docstring to this Python function explaining its behavior and parameters..."
 Project Planning: "I want to build a REST API in Node.js that manages user accounts. Outline the main steps and components needed to implement this, including any tools or frameworks you would use."
 `,
+        ],
         references: [],
       },
       setup_checklist: {
@@ -832,8 +837,8 @@ Project Planning: "I want to build a REST API in Node.js that manages user accou
             references: [],
           },
           {
-            name: "POPE (Polling Object via Hallucination Evaluation): Specifically measures Object Hallucination",
-            description: `It asks the agent about non-existent objects in an image to see if the agent "lies" (a common failure mode where agents hallucinate objects based on text probability rather than visual evidence).`,
+            name: "POPE (Polling Object via Hallucination Evaluation)",
+            description: `Specifically measures Object Hallucination. It asks the agent about non-existent objects in an image to see if the agent "lies" (a common failure mode where agents hallucinate objects based on text probability rather than visual evidence).`,
             references: ["Li et al., 2023"],
           },
           {
@@ -931,7 +936,8 @@ Project Planning: "I want to build a REST API in Node.js that manages user accou
       prompt_template: {
         title: "Prompt Template",
         name: "Example prompts for Visual Information Extraction, Complex Visual Reasoning and Creative Storytelling",
-        code: `
+        code: [
+          `
 Task: Complex Visual Reasoning (CoT)
 | User: [Image: A screenshot of a Python error stack trace overlaid on a code editor]
 Prompt: I am getting this error while running my script.
@@ -939,11 +945,13 @@ Prompt: I am getting this error while running my script.
 2. Localization: Look at the code in the editor window (specifically lines 10-20).
 3. Reasoning: Explain the relationship between the code logic and the error message.
 4. Action: Provide the corrected code block to fix this bug.
-
+`,
+          `
 Task: Creative Storytelling (Interleaved)
 | User: Write a travel guide on "How to fix a flat tire."
 Prompt: Generate a step-by-step guide. For each step (e.g., "Jack up the car"), provide a detailed text description AND describe the visual content of an image that would best illustrate this step. Format the image description as [IMAGE_PROMPT: <description>] so our illustrator can create it.
 `,
+        ],
         references: [],
       },
 
@@ -1173,9 +1181,11 @@ Prompt: Generate a step-by-step guide. For each step (e.g., "Jack up the car"), 
       prompt_template: {
         title: "Prompt Template",
         name: "Example prompts for High-Level Navigation & Search, Manipulation with Constraints (VLA style) and Failure Recovery",
-        code: `Task: High-Level Navigation & Search
+        code: [
+          `Task: High-Level Navigation & Search
 | Scan Coffee Table -> Go to Bedroom -> Scan Desk  ->Execution: If found, output FOUND and the coordinates. If not, update the map and try the next location.
-
+`,
+          `
 Task: Manipulation with Constraints (VLA style)
 | Context: [Image: A cluttered table with a glass of water and a sponge]
 User: "Clean the table but don't spill the water."
@@ -1187,10 +1197,12 @@ Plan:
 4. Wipe_Surface avoiding Safety_Zone.
 5. Monitor Water_Level (if motion detected, STOP).
 
-
+`,
+          `
 Task: Failure Recovery
 | Adjust_Pose(+5 deg pitch) -> Grasp(Force=High).
 `,
+        ],
         references: [],
       },
       setup_checklist: {
@@ -1501,24 +1513,31 @@ Task: Failure Recovery
       prompt_template: {
         title: "Prompt Template",
         name: "Example Prompt templates categorized by subtask",
-        code: `Financial Statement Analysis & Forecast: Use chain-of-thought prompts to mimic analyst reasoning.
-          Example: “You are a financial analyst. Here are the company’s balance sheet and income statement for the last two years (data given). Identify notable changes, compute key financial ratios (show formulas and calculations), interpret their meanings, and then predict whether next year’s earnings will increase or decrease. State the predicted magnitude (large/moderate/small) and confidence. Finally, provide a paragraph explaining your rationale.
-
-          Investment Advice (Robo-Advisor): Frame as a personal consultant to yield actionable strategies.
-          Example: “You are a personal financial advisor. A 40-year-old client has $1,000,000 to invest and is moderately risk-averse. They want a diversified portfolio for retirement in 20 years. Propose an asset allocation (e.g., stocks, bonds, alternatives) with percentages and explain your strategy, including risk management (e.g,. stop-loss levels).”
-          
-          Document Q&A: Directly query a financial text for facts or computations. For instance, using RAG or chain-of-thought to navigate tables.
-          Example: “The following is an excerpt from Company X’s 10-K: 'Total revenue: $5.2B; Cost of Goods Sold: $3.1B; ...'. Question: What is Company X’s gross profit margin (%) for 2023? Show your calculations and answer.” This format (giving text, then a question) appears in FinBench/FinQA tasks. Nvidia’s example of a RAG agent answering “What was X Corp’s total revenue for FY2022?” illustrates this style.
-
-          Earnings Call / News Summarization: Summarize or extract insights from unstructured text.
-          Example: “You are a financial journalist. Given the transcript of Company Y’s Q3 earnings call below, list the three main challenges the CEO mentioned and summarize the company’s plan to address them in your own words.” (MarketSenseAI.)
-
-          Market Trend Analysis: Combine price data and news.
-          Example: “Company Z’s stock rose 10% yesterday after an FDA approval. However, its P/E is now unusually high. Based on this and the following news excerpt [news], would you buy, sell, or hold the stock? Explain your reasoning in detail.”
-
-          Risk/Compliance Check: Verify whether an action is allowed.
-          Example: “You are a compliance officer. A broker suggests buying 10,000 shares of a thinly traded stock for a client without full disclosure of risks. Is this recommendation compliant with FINRA regulations? Explain why or why not.”
+        code: [
+          `Financial Statement Analysis & Forecast: Use chain-of-thought prompts to mimic analyst reasoning.
+Example: “You are a financial analyst. Here are the company’s balance sheet and income statement for the last two years (data given). Identify notable changes, compute key financial ratios (show formulas and calculations), interpret their meanings, and then predict whether next year’s earnings will increase or decrease. State the predicted magnitude (large/moderate/small) and confidence. Finally, provide a paragraph explaining your rationale.
+          `,
+          `
+Investment Advice (Robo-Advisor): Frame as a personal consultant to yield actionable strategies.
+Example: “You are a personal financial advisor. A 40-year-old client has $1,000,000 to invest and is moderately risk-averse. They want a diversified portfolio for retirement in 20 years. Propose an asset allocation (e.g., stocks, bonds, alternatives) with percentages and explain your strategy, including risk management (e.g,. stop-loss levels).”
+          `,
+          `
+Document Q&A: Directly query a financial text for facts or computations. For instance, using RAG or chain-of-thought to navigate tables.
+Example: “The following is an excerpt from Company X’s 10-K: 'Total revenue: $5.2B; Cost of Goods Sold: $3.1B; ...'. Question: What is Company X’s gross profit margin (%) for 2023? Show your calculations and answer.” This format (giving text, then a question) appears in FinBench/FinQA tasks. Nvidia’s example of a RAG agent answering “What was X Corp’s total revenue for FY2022?” illustrates this style.
 `,
+          `
+Earnings Call / News Summarization: Summarize or extract insights from unstructured text.
+Example: “You are a financial journalist. Given the transcript of Company Y’s Q3 earnings call below, list the three main challenges the CEO mentioned and summarize the company’s plan to address them in your own words.” (MarketSenseAI.)
+`,
+          `
+Market Trend Analysis: Combine price data and news.
+Example: “Company Z’s stock rose 10% yesterday after an FDA approval. However, its P/E is now unusually high. Based on this and the following news excerpt [news], would you buy, sell, or hold the stock? Explain your reasoning in detail.”
+`,
+          `
+Risk/Compliance Check: Verify whether an action is allowed.
+Example: “You are a compliance officer. A broker suggests buying 10,000 shares of a thinly traded stock for a client without full disclosure of risks. Is this recommendation compliant with FINRA regulations? Explain why or why not.”
+`,
+        ],
         references: [
           "Kim et al., 2024",
           "Yang et al., 2023",

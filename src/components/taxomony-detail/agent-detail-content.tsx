@@ -126,20 +126,21 @@ export function AgentDetailContent({ agent }: { agent: AgentDetail }) {
             <p className="text-muted-foreground leading-relaxed text-pretty">
               {detailedInfo.overview.content}
             </p>
-            {detailedInfo.overview.references && (
-              <div className="mt-6 pt-6 border-t border-border">
-                <h4 className="text-sm font-semibold mb-3 text-foreground">
-                  References
-                </h4>
-                <div className="flex flex-wrap gap-2">
-                  {detailedInfo.overview.references.map((ref) => (
-                    <Badge key={ref} variant="outline" className="text-xs">
-                      {ref}
-                    </Badge>
-                  ))}
+            {detailedInfo.overview.references &&
+              detailedInfo.overview.references.length > 0 && (
+                <div className="mt-6 pt-6 border-t border-border">
+                  <h4 className="text-sm font-semibold mb-3 text-foreground">
+                    References
+                  </h4>
+                  <div className="flex flex-wrap gap-2">
+                    {detailedInfo.overview.references.map((ref) => (
+                      <Badge key={ref} variant="outline" className="text-xs">
+                        {ref}
+                      </Badge>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
           </CardContent>
         </Card>
       </section>
@@ -154,9 +155,6 @@ export function AgentDetailContent({ agent }: { agent: AgentDetail }) {
         <div className="space-y-8">
           {detailedInfo.capabilities.items.map((section) => (
             <div key={section.name}>
-              <h3 className="text-2xl font-semibold mb-4 text-balance">
-                {section.name}
-              </h3>
               <div className="grid gap-4">
                 <Card key={section.name} className="bg-card border-border">
                   <CardHeader>
@@ -166,7 +164,7 @@ export function AgentDetailContent({ agent }: { agent: AgentDetail }) {
                     <p className="text-muted-foreground leading-relaxed text-pretty">
                       {section.description}
                     </p>
-                    {section.references && (
+                    {section.references.length > 0 && (
                       <div className="mt-6 pt-6 border-t border-border">
                         <h4 className="text-sm font-semibold mb-3 text-foreground">
                           References
@@ -201,7 +199,6 @@ export function AgentDetailContent({ agent }: { agent: AgentDetail }) {
         </div>
 
         <div className="space-y-12">
-          {/* ===== DATA SOURCES ===== */}
           <div>
             <h3 className="text-2xl font-semibold mb-4">Data Sources</h3>
 
@@ -241,43 +238,53 @@ export function AgentDetailContent({ agent }: { agent: AgentDetail }) {
             </div>
           </div>
 
-          {/* ===== BENCHMARKS ===== */}
           <div>
             <h3 className="text-2xl font-semibold mb-4">Benchmarks</h3>
 
             <div className="grid gap-6">
-              {detailedInfo.data_source_bench.benchmarks.map((bench) => (
-                <Card key={bench.name} className="bg-card border-border">
-                  <CardHeader>
-                    <CardTitle className="text-lg">{bench.name}</CardTitle>
-                  </CardHeader>
+              {detailedInfo.data_source_bench.benchmarks.map((bench) => {
+                const [categoryLabel, shortName] = bench.name.includes(":")
+                  ? bench.name.split(":").map((s) => s.trim())
+                  : [undefined, bench.name];
 
-                  <CardContent>
-                    <p className="text-muted-foreground leading-relaxed text-pretty">
-                      {bench.description}
-                    </p>
+                return (
+                  <Card key={bench.name} className="bg-card border-border">
+                    <CardHeader>
+                      {categoryLabel && (
+                        <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground mb-1">
+                          {categoryLabel}
+                        </p>
+                      )}
+                      <CardTitle className="text-lg">{shortName}</CardTitle>
+                    </CardHeader>
 
-                    {bench.references && bench.references.length > 0 && (
-                      <div className="mt-6 pt-6 border-t border-border">
-                        <h4 className="text-sm font-semibold mb-3">
-                          References
-                        </h4>
-                        <div className="flex flex-wrap gap-2">
-                          {bench.references.map((ref) => (
-                            <Badge
-                              key={ref}
-                              variant="outline"
-                              className="text-xs"
-                            >
-                              {ref}
-                            </Badge>
-                          ))}
+                    <CardContent>
+                      <p className="text-muted-foreground leading-relaxed text-pretty">
+                        {bench.description}
+                      </p>
+
+                      {bench.references && bench.references.length > 0 && (
+                        <div className="mt-6 pt-6 border-t border-border">
+                          <h4 className="text-sm font-semibold mb-3">
+                            References
+                          </h4>
+                          <div className="flex flex-wrap gap-2">
+                            {bench.references.map((ref) => (
+                              <Badge
+                                key={ref}
+                                variant="outline"
+                                className="text-xs"
+                              >
+                                {ref}
+                              </Badge>
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              ))}
+                      )}
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -303,7 +310,7 @@ export function AgentDetailContent({ agent }: { agent: AgentDetail }) {
                   <p className="text-muted-foreground leading-relaxed text-pretty">
                     {vuln.description}
                   </p>
-                  {vuln.references && (
+                  {vuln.references && vuln.references.length > 0 && (
                     <div className="mt-6 pt-6 border-t border-border">
                       <h4 className="text-sm font-semibold mb-3 text-foreground">
                         References
@@ -344,7 +351,7 @@ export function AgentDetailContent({ agent }: { agent: AgentDetail }) {
                 <p className="text-muted-foreground leading-relaxed text-pretty">
                   {defense.description}
                 </p>
-                {defense.references && (
+                {defense.references.length > 0 && (
                   <div className="mt-6 pt-6 border-t border-border">
                     <h4 className="text-sm font-semibold mb-3 text-foreground">
                       References
@@ -391,7 +398,7 @@ export function AgentDetailContent({ agent }: { agent: AgentDetail }) {
                     />
                   </div>
                 )}
-                {example_agent.references && (
+                {example_agent.references.length > 0 && (
                   <div className="mt-6 pt-6 border-t border-border">
                     <h4 className="text-sm font-semibold mb-3 text-foreground">
                       References
@@ -427,16 +434,19 @@ export function AgentDetailContent({ agent }: { agent: AgentDetail }) {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div
-                className="
-              rounded-lg border border-border/70 bg-muted/60
-              p-4 font-mono text-xs leading-relaxed
-              whitespace-pre-wrap overflow-x-auto
-            "
-              >
-                {detailedInfo.prompt_template.code}
-              </div>
-              {detailedInfo.prompt_template.references && (
+              {detailedInfo.prompt_template.code.map((c, i) => (
+                <div
+                  key={i}
+                  className="
+      rounded-lg border border-border/70 bg-muted/60
+      p-4 font-mono text-xs leading-relaxed
+      whitespace-pre-wrap overflow-x-auto
+    "
+                >
+                  {c}
+                </div>
+              ))}
+              {detailedInfo.prompt_template.references.length > 0 && (
                 <div className="mt-6 pt-6 border-t border-border">
                   <h4 className="text-sm font-semibold mb-3 text-foreground">
                     References
