@@ -1,6 +1,17 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AgentDetail } from "@/lib/agent-data";
+import { AgentDetail } from "@/lib/agent-detail-data";
+import { CheckCircle2 } from "lucide-react";
+import Image from "next/image";
+import {
+  ClipboardCheckIcon,
+  CodeIcon,
+  DatabaseIcon,
+  InfoIcon,
+  LightbulbIcon,
+  ShieldCheckIcon,
+  ZapIcon,
+} from "./agent-detail-icon";
 
 function CheckCircleIcon({ className }: { className?: string }) {
   return (
@@ -104,9 +115,12 @@ export function AgentDetailContent({ agent }: { agent: AgentDetail }) {
     <div className="space-y-16">
       {/* Overview Section */}
       <section id="overview" className="scroll-mt-24">
-        <h2 className="text-3xl font-bold mb-6 text-balance">
-          {detailedInfo.overview.title}
-        </h2>
+        <div className="flex items-center gap-3 mb-6">
+          <InfoIcon className="h-7 w-7 text-purple-500 self-center flex-shrink-0" />
+          <h2 className="text-3xl font-bold text-balance leading-tight">
+            {detailedInfo.overview.title}
+          </h2>
+        </div>
         <Card className="bg-card border-border">
           <CardContent className="pt-6">
             <p className="text-muted-foreground leading-relaxed text-pretty">
@@ -130,30 +144,35 @@ export function AgentDetailContent({ agent }: { agent: AgentDetail }) {
         </Card>
       </section>
 
-      {/* Taxonomy Section */}
-      <section id="taxonomy" className="scroll-mt-24">
-        <h2 className="text-3xl font-bold mb-6 text-balance">
-          {detailedInfo.taxonomy.title}
-        </h2>
+      {/* Capabilities Section */}
+      <section id="capabilities" className="scroll-mt-24">
+        <div className="flex items-center gap-3 mb-6 self-center flex-shrink-0">
+          <ZapIcon className="h-7 w-7 text-yellow-500" />
+          <h2 className="text-3xl font-bold text-balance">Capabilities</h2>
+        </div>
+
         <div className="space-y-8">
-          {detailedInfo.taxonomy.sections.map((section) => (
-            <div key={section.title}>
+          {detailedInfo.capabilities.items.map((section) => (
+            <div key={section.name}>
               <h3 className="text-2xl font-semibold mb-4 text-balance">
-                {section.title}
+                {section.name}
               </h3>
               <div className="grid gap-4">
-                {section.items.map((item) => (
-                  <Card key={item.name} className="bg-card border-border">
-                    <CardHeader>
-                      <CardTitle className="text-lg">{item.name}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-muted-foreground leading-relaxed text-pretty">
-                        {item.description}
-                      </p>
-                      {item.references && (
-                        <div className="mt-4 flex flex-wrap gap-2">
-                          {item.references.map((ref) => (
+                <Card key={section.name} className="bg-card border-border">
+                  <CardHeader>
+                    <CardTitle className="text-lg">{section.name}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground leading-relaxed text-pretty">
+                      {section.description}
+                    </p>
+                    {section.references && (
+                      <div className="mt-6 pt-6 border-t border-border">
+                        <h4 className="text-sm font-semibold mb-3 text-foreground">
+                          References
+                        </h4>
+                        <div className="flex flex-wrap gap-2">
+                          {section.references.map((ref) => (
                             <Badge
                               key={ref}
                               variant="outline"
@@ -163,16 +182,106 @@ export function AgentDetailContent({ agent }: { agent: AgentDetail }) {
                             </Badge>
                           ))}
                         </div>
-                      )}
-                    </CardContent>
-                  </Card>
-                ))}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
               </div>
             </div>
           ))}
         </div>
       </section>
+      {/* Data Source Section */}
+      <section id="data_source_bench" className="scroll-mt-24">
+        <div className="flex items-center gap-3 mb-6">
+          <DatabaseIcon className="h-7 w-7 text-blue-500 self-center flex-shrink-0" />
+          <h2 className="text-3xl font-bold text-balance">
+            Data Source & Benchmarks
+          </h2>
+        </div>
 
+        <div className="space-y-12">
+          {/* ===== DATA SOURCES ===== */}
+          <div>
+            <h3 className="text-2xl font-semibold mb-4">Data Sources</h3>
+
+            <div className="grid gap-6">
+              {detailedInfo.data_source_bench.dataSources.map((section) => (
+                <Card key={section.name} className="bg-card border-border">
+                  <CardHeader>
+                    <CardTitle className="text-lg">{section.name}</CardTitle>
+                  </CardHeader>
+
+                  <CardContent>
+                    <p className="text-muted-foreground leading-relaxed text-pretty">
+                      {section.description}
+                    </p>
+
+                    {section.references && section.references.length > 0 && (
+                      <div className="mt-6 pt-6 border-t border-border">
+                        <h4 className="text-sm font-semibold mb-3">
+                          References
+                        </h4>
+                        <div className="flex flex-wrap gap-2">
+                          {section.references.map((ref) => (
+                            <Badge
+                              key={ref}
+                              variant="outline"
+                              className="text-xs"
+                            >
+                              {ref}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+
+          {/* ===== BENCHMARKS ===== */}
+          <div>
+            <h3 className="text-2xl font-semibold mb-4">Benchmarks</h3>
+
+            <div className="grid gap-6">
+              {detailedInfo.data_source_bench.benchmarks.map((bench) => (
+                <Card key={bench.name} className="bg-card border-border">
+                  <CardHeader>
+                    <CardTitle className="text-lg">{bench.name}</CardTitle>
+                  </CardHeader>
+
+                  <CardContent>
+                    <p className="text-muted-foreground leading-relaxed text-pretty">
+                      {bench.description}
+                    </p>
+
+                    {bench.references && bench.references.length > 0 && (
+                      <div className="mt-6 pt-6 border-t border-border">
+                        <h4 className="text-sm font-semibold mb-3">
+                          References
+                        </h4>
+                        <div className="flex flex-wrap gap-2">
+                          {bench.references.map((ref) => (
+                            <Badge
+                              key={ref}
+                              variant="outline"
+                              className="text-xs"
+                            >
+                              {ref}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
       {/* Vulnerabilities Section */}
       <section id="vulnerabilities" className="scroll-mt-24">
         <div className="flex items-center gap-3 mb-6">
@@ -183,24 +292,11 @@ export function AgentDetailContent({ agent }: { agent: AgentDetail }) {
         </div>
         <div className="grid gap-4">
           {detailedInfo.vulnerabilities.items.map((vuln) => {
-            const severity = severityConfig[vuln.severity];
-            const SeverityIcon = severity.icon;
-
             return (
               <Card key={vuln.name} className="bg-card border-border">
                 <CardHeader>
                   <div className="flex items-start justify-between gap-4">
                     <CardTitle className="text-lg">{vuln.name}</CardTitle>
-                    <div
-                      className={`flex items-center gap-1.5 px-3 py-1 rounded-full ${severity.bg} shrink-0`}
-                    >
-                      <SeverityIcon
-                        className={`h-3.5 w-3.5 ${severity.color}`}
-                      />
-                      <span className={`text-xs font-medium ${severity.color}`}>
-                        {severity.label}
-                      </span>
-                    </div>
                   </div>
                 </CardHeader>
                 <CardContent>
@@ -208,12 +304,21 @@ export function AgentDetailContent({ agent }: { agent: AgentDetail }) {
                     {vuln.description}
                   </p>
                   {vuln.references && (
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      {vuln.references.map((ref) => (
-                        <Badge key={ref} variant="outline" className="text-xs">
-                          {ref}
-                        </Badge>
-                      ))}
+                    <div className="mt-6 pt-6 border-t border-border">
+                      <h4 className="text-sm font-semibold mb-3 text-foreground">
+                        References
+                      </h4>
+                      <div className="flex flex-wrap gap-2">
+                        {vuln.references.map((ref) => (
+                          <Badge
+                            key={ref}
+                            variant="outline"
+                            className="text-xs"
+                          >
+                            {ref}
+                          </Badge>
+                        ))}
+                      </div>
                     </div>
                   )}
                 </CardContent>
@@ -223,28 +328,170 @@ export function AgentDetailContent({ agent }: { agent: AgentDetail }) {
         </div>
       </section>
 
-      {/* Attacks Section */}
-      <section id="attacks" className="scroll-mt-24">
-        <h2 className="text-3xl font-bold mb-6 text-balance">
-          {detailedInfo.attacks.title}
-        </h2>
+      {/* Defense Section */}
+      <section id="defenses" className="scroll-mt-24">
+        <div className="flex items-center gap-3 mb-6">
+          <ShieldCheckIcon className="h-7 w-7 text-green-500 " />
+          <h2 className="text-3xl font-bold text-balance">Defenses</h2>
+        </div>
         <div className="grid gap-4">
-          {detailedInfo.attacks.items.map((attack) => (
-            <Card key={attack.name} className="bg-card border-border">
+          {detailedInfo.defense.items.map((defense) => (
+            <Card key={defense.name} className="bg-card border-border">
               <CardHeader>
-                <CardTitle className="text-lg">{attack.name}</CardTitle>
+                <CardTitle className="text-lg">{defense.name}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground leading-relaxed text-pretty">
-                  {attack.description}
+                  {defense.description}
                 </p>
-                {attack.references && (
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {attack.references.map((ref) => (
+                {defense.references && (
+                  <div className="mt-6 pt-6 border-t border-border">
+                    <h4 className="text-sm font-semibold mb-3 text-foreground">
+                      References
+                    </h4>
+                    <div className="flex flex-wrap gap-2">
+                      {defense.references.map((ref) => (
+                        <Badge key={ref} variant="outline" className="text-xs">
+                          {ref}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      {/* Example Agent Section */}
+      <section id="example_agent" className="scroll-mt-24">
+        <div className="flex items-center gap-3 mb-6">
+          <LightbulbIcon className="h-7 w-7 text-orange-500" />
+          <h2 className="text-3xl font-bold text-balance">Example Agent</h2>
+        </div>
+        <div className="grid gap-4">
+          {detailedInfo.example_agent.items.map((example_agent) => (
+            <Card key={example_agent.name} className="bg-card border-border">
+              <CardHeader>
+                <CardTitle className="text-lg">{example_agent.name}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground leading-relaxed text-pretty">
+                  {example_agent.description}
+                </p>
+                {example_agent.image && (
+                  <div className="mt-4">
+                    <Image
+                      src={example_agent.image}
+                      alt={example_agent.image}
+                      width={800}
+                      height={420}
+                      className="rounded-lg object-cover"
+                    />
+                  </div>
+                )}
+                {example_agent.references && (
+                  <div className="mt-6 pt-6 border-t border-border">
+                    <h4 className="text-sm font-semibold mb-3 text-foreground">
+                      References
+                    </h4>
+                    <div className="flex flex-wrap gap-2">
+                      {example_agent.references.map((ref) => (
+                        <Badge key={ref} variant="outline" className="text-xs">
+                          {ref}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
+      {/* Prompt Template Section */}
+      <section id="prompt_template" className="scroll-mt-24">
+        <div className="flex items-center gap-3 mb-6">
+          <CodeIcon className="h-7 w-7 text-cyan-500" />
+          <h2 className="text-3xl font-bold text-balance">Prompt Template</h2>
+        </div>
+        <div className="grid gap-4">
+          <Card
+            key={detailedInfo.prompt_template.title}
+            className="bg-card border-border"
+          >
+            <CardHeader>
+              <CardTitle className="text-lg">
+                {detailedInfo.prompt_template.name}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div
+                className="
+              rounded-lg border border-border/70 bg-muted/60
+              p-4 font-mono text-xs leading-relaxed
+              whitespace-pre-wrap overflow-x-auto
+            "
+              >
+                {detailedInfo.prompt_template.code}
+              </div>
+              {detailedInfo.prompt_template.references && (
+                <div className="mt-6 pt-6 border-t border-border">
+                  <h4 className="text-sm font-semibold mb-3 text-foreground">
+                    References
+                  </h4>
+                  <div className="flex flex-wrap gap-2">
+                    {detailedInfo.prompt_template.references.map((ref) => (
                       <Badge key={ref} variant="outline" className="text-xs">
                         {ref}
                       </Badge>
                     ))}
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+      {/* Setup Checklist Section */}
+      <section id="setup_checklist" className="scroll-mt-24">
+        <div className="flex items-center gap-3 mb-6">
+          <ClipboardCheckIcon className="h-7 w-7 text-indigo-500" />
+          <h2 className="text-3xl font-bold text-balance">Setup Checklist</h2>
+        </div>
+
+        <div className="grid gap-4">
+          {detailedInfo.setup_checklist.items.map((block) => (
+            <Card key={block.name} className="bg-card border-border">
+              <CardHeader>
+                <CardTitle className="text-lg">{block.name}</CardTitle>
+              </CardHeader>
+
+              <CardContent className="space-y-4">
+                <ul className="space-y-2">
+                  {block.items.map((step: string, idx: number) => (
+                    <li key={idx} className="flex items-start gap-2">
+                      <CheckCircle2 className="h-4 w-4 mt-1 text-primary shrink-0" />
+                      <span className="text-sm text-muted-foreground leading-relaxed">
+                        {step}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+
+                {block.references && block.references.length > 0 && (
+                  <div className="mt-6 pt-6 border-t border-border">
+                    <h4 className="text-sm font-semibold mb-3 text-foreground">
+                      References
+                    </h4>
+                    <div className="flex flex-wrap gap-2">
+                      {block.references.map((ref) => (
+                        <Badge key={ref} variant="outline" className="text-xs">
+                          {ref}
+                        </Badge>
+                      ))}
+                    </div>
                   </div>
                 )}
               </CardContent>

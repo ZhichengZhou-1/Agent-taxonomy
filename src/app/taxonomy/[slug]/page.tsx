@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { AgentDetailHero } from "@/components/taxomony-detail/agent-detail-hero";
 import { AgentDetailNav } from "@/components/taxomony-detail/agent-detail-nav";
 import { AgentDetailContent } from "@/components/taxomony-detail/agent-detail-content";
-import { getAgentBySlug } from "@/lib/agent-data";
+import { getAgentBySlug } from "@/lib/agent-detail-data";
 
 export default async function AgentDetailPage({
   params,

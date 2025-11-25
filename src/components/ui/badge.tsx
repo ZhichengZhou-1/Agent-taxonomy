@@ -12,19 +12,14 @@ export const badgeVariants = cva(
   {
     variants: {
       variant: {
-        // Solid primary
         default:
           "bg-primary text-primary-foreground border-transparent hover:bg-primary/90",
-        // Muted/neutral
         secondary:
           "bg-secondary text-secondary-foreground border-transparent hover:bg-secondary/80",
-        // Destructive emphasis
         destructive:
           "bg-destructive text-destructive-foreground border-transparent hover:bg-destructive/90",
-        // Minimal, inherits background
         outline:
           "border-input text-foreground hover:bg-accent hover:text-accent-foreground",
-        // Soft style (subtle background)
         soft: "bg-muted text-foreground border-transparent hover:bg-muted/80",
       },
       size: {
@@ -32,7 +27,6 @@ export const badgeVariants = cva(
         md: "px-2.5 py-0.5 text-xs",
         lg: "px-3 py-1 text-sm",
       },
-      // Optional “pill with dot” style
       withDot: {
         true: "[&_.dot]:inline-block [&_.dot]:size-1.5 [&_.dot]:rounded-full [&_.dot]:bg-current",
         false: "",
@@ -51,17 +45,6 @@ export type BadgeProps = React.HTMLAttributes<HTMLSpanElement> &
     asChild?: boolean;
   };
 
-/**
- * Badge – a small inline label.
- * Supports `asChild` to style anchors, links, etc.
- *
- * Examples:
- *  <Badge>New</Badge>
- *  <Badge variant="secondary">Beta</Badge>
- *  <Badge variant="outline" size="lg">Outline</Badge>
- *  <Badge asChild><a href="/changelog">v2.0</a></Badge>
- *  <Badge withDot><span><span className="dot" />Live</span></Badge>
- */
 export function Badge({
   className,
   variant,

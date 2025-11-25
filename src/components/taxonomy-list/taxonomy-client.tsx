@@ -1,45 +1,47 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState, useMemo } from "react";
 import {
   TaxonomyFilters,
   Category,
 } from "@/components/taxonomy-list/taxonomy-filters";
 import { TaxonomyGrid } from "@/components/taxonomy-list/taxonomy-grid";
-import { agentListMock } from "@/components/taxonomy-list/mockAgentList";
-import { AgentListItem } from "@/interface/agent";
+import { agentList } from "@/lib/agent-list-data";
 
-// Helper to lowercase safely
-const lc = (s?: string) => (s ?? "").toLowerCase();
+const categoryToAgentName: Record<Category, string | null> = {
+  All: null,
+  "Web Agent": "Web Agent",
+  "Coding Agent": "Coding Agent",
+  "Multimodal Agent": "Multimodal Agent",
+  "Embodied Agent": "Embodied Agent",
+  "Financial Agent": "Finance Agent",
+};
 
 export function TaxonomyClient() {
   const [query, setQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<Category>("All");
 
-  const agentList = useMemo<AgentListItem[]>(() => {
-    const q = lc(query.trim());
+  const filteredAgents = useMemo(() => {
+    return agentList.filter((agent) => {
+      if (activeCategory !== "All") {
+        const expectedName = categoryToAgentName[activeCategory];
+        if (expectedName && agent.name !== expectedName) {
+          return false;
+        }
+      }
 
-    return agentListMock.filter((a) => {
-      // 1) Category filter
-      const categoryOk =
-        activeCategory === "All" || a.category === activeCategory;
-      if (!categoryOk) return false;
+      if (query.trim()) {
+        const searchLower = query.toLowerCase();
+        return (
+          agent.name.toLowerCase().includes(searchLower) ||
+          agent.description.toLowerCase().includes(searchLower) ||
+          agent.capabilities.some((cap) =>
+            cap.toLowerCase().includes(searchLower)
+          )
+        );
+      }
 
-      // 2) Text query (name + description + topCapabilities)
-      if (!q) return true;
-
-      const haystack = [
-        a.name,
-        // support either shortDescription or description depending on your mock
-        (a as AgentListItem).shortDescription ??
-          (a as AgentListItem).description,
-        ...(a.topCapabilities ?? []),
-      ]
-        .filter(Boolean)
-        .join(" ")
-        .toLowerCase();
-
-      return haystack.includes(q);
+      return true;
     });
   }, [query, activeCategory]);
 
@@ -51,7 +53,7 @@ export function TaxonomyClient() {
         activeCategory={activeCategory}
         onCategoryChange={setActiveCategory}
       />
-      <TaxonomyGrid agentList={agentList} />
+      <TaxonomyGrid agentList={filteredAgents} />
     </>
   );
 }

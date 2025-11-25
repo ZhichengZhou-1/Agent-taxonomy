@@ -1,5 +1,4 @@
-import { Button } from "@/components/ui/button";
-import { Shield, Menu } from "lucide-react";
+import { Shield } from "lucide-react";
 import Link from "next/link";
 
 export function Header() {
@@ -15,43 +14,6 @@ export function Header() {
               AgentAtlas
             </span>
           </Link>
-
-          <nav className="hidden md:flex items-center gap-8">
-            <Link
-              href="/taxonomy"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Taxonomy
-            </Link>
-            <Link
-              href="/vulnerabilities"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Vulnerabilities
-            </Link>
-            <Link
-              href="/research"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Research
-            </Link>
-            <Link
-              href="/docs"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Docs
-            </Link>
-          </nav>
-
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" className="hidden md:flex">
-              Sign In
-            </Button>
-            <Button className="glow-primary">Get Started</Button>
-            <Button variant="ghost" size="icon" className="md:hidden">
-              <Menu className="h-5 w-5" />
-            </Button>
-          </div>
         </div>
       </div>
     </header>

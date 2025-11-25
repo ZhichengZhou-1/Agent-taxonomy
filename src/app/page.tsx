@@ -1,6 +1,5 @@
 import { Header } from "@/components/layout/header";
 import { MainSection } from "@/components/layout/main-section";
-import { StatsSection } from "@/components/layout/stats-section";
 
 export default function HomePage() {
   return (
@@ -8,7 +7,6 @@ export default function HomePage() {
       <Header />
       <main>
         <MainSection />
-        <StatsSection />
       </main>
     </div>
   );

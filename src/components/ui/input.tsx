@@ -3,11 +3,6 @@ import { cn } from "@/lib/utils";
 
 export type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
 
-/**
- * Input component — styled text field.
- * Example:
- *   <Input placeholder="Search..." />
- */
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, ...props }, ref) => {
     return (
