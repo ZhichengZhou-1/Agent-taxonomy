@@ -10,9 +10,7 @@ export function Header() {
             <div className="p-2 rounded-lg bg-primary/10 glow-primary">
               <Shield className="h-6 w-6 text-primary" />
             </div>
-            <span className="text-xl font-semibold text-foreground">
-              AgentAtlas
-            </span>
+            <span className="text-xl font-semibold text-foreground">AVA</span>
           </Link>
         </div>
       </div>

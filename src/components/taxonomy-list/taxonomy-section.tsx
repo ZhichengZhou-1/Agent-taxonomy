@@ -8,7 +8,7 @@ export function TaxonomySection() {
           </span>
         </div>
         <h1 className="text-5xl md:text-6xl font-bold mb-6 text-balance">
-          Agent taxonomy and vulnerability atlas
+          Agent Taxonomy and Vulnerability Atlas
         </h1>
         <p className="text-xl text-muted-foreground text-balance leading-relaxed">
           A comprehensive classification system for AI agents across different
